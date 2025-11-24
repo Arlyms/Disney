@@ -1,6 +1,6 @@
 <template>
-  <div class="enigme3">
-    <div id="dragon">
+  <div class="enigme7">
+    <div id="tower">
       <div :class="['color_code']">
         <button @click="login"></button>
       </div>
@@ -23,7 +23,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'Enigme3',
+  name: 'Enigme7',
   data() {
     return {
       // single string field for password (will replace the 3 separate inputs)
@@ -51,10 +51,10 @@ export default {
       this.$store.commit('updateEnteredPassword', fullPassword);
       this.$store.commit('hideProtectedPage');
       // return the promise so handleInput can track submission state
-      return this.$store.dispatch('verifyPassword3').then(() => {
+      return this.$store.dispatch('verifyPassword7').then(() => {
         if (this.$store.state.isProtectedPageVisible) {
           // Redirige vers la page protégée
-          this.$router.push('/4');
+          this.$router.push('/8');
         } else {
           this.isPasswordIncorrect = true;
           setTimeout(() => {
@@ -69,14 +69,14 @@ export default {
 </script>
 
 <style lang="scss">
-  .enigme3{
+  .enigme7{
     position: fixed;
     display: flex;
     margin-top: 100px;
     flex-direction: column;
     width: 100%;
     height: 100vh;
-    #dragon{
+    #tower{
       position: relative;
       display: flex;
       justify-content: center;
