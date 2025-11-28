@@ -6,13 +6,23 @@
       </div>
     </div>
     <div class="code">
-      <div :class="['password-input', { shake: isPasswordIncorrect, error: isPasswordIncorrect }]">
-        <input
-          v-model="password"
-          @input="handleInput"
-          maxlength="3"
-          aria-label="code"
-        />
+      <div class="inputs-container">
+        <div :class="['password-input', { shake: isPasswordIncorrect, error: isPasswordIncorrect }]">
+          <input
+            v-model="password1"
+            @input="handleInput"
+            maxlength="2"
+            aria-label="code1"
+          />
+        </div>
+        <div :class="['password-input', { shake: isPasswordIncorrect, error: isPasswordIncorrect }]">
+          <input
+            v-model="password2"
+            @input="handleInput"
+            maxlength="2"
+            aria-label="code2"
+          />
+        </div>
       </div>
 
       <div class="validate-row">
@@ -29,8 +39,8 @@ export default {
   name: 'Enigme7',
   data() {
     return {
-      // single string field for password (will replace the 3 separate inputs)
-      password: '',
+      password1: '',
+      password2: '',
       isPasswordIncorrect: false,
       isSubmitting: false,
     };
@@ -38,17 +48,22 @@ export default {
 
     methods: {
     handleInput() {
-      // Ne pas valider automatiquement ; tronquer simplement la saisie
-      if (this.password && this.password.length > 1) {
-        this.password = this.password.slice(0, 1);
+      // Ne pas valider automatiquement. On limite simplement la longueur saisie.
+      if (this.password1 && this.password1.length > 2) {
+        this.password1 = this.password1.slice(0, 2);
+      }
+      if (this.password2 && this.password2.length > 2) {
+        this.password2 = this.password2.slice(0, 2);
       }
     },
     login() {
       if (this.isSubmitting) return Promise.resolve();
       this.isSubmitting = true;
-      const fullPassword = this.password;
+
+      const fullPassword = this.password1 + this.password2;
       this.$store.commit('updateEnteredPassword', fullPassword);
       this.$store.commit('hideProtectedPage');
+
       return this.$store.dispatch('verifyPassword7').then(() => {
         if (this.$store.state.isProtectedPageVisible) {
           this.$router.push('/8');
@@ -127,9 +142,17 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    .inputs-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
     .password-input {
       display: flex;
       font-size: 25px;
+      padding-left: 10px;
+      padding-right: 10px;
       justify-content: center;
       width: 50px; 
       height: 100px;
@@ -153,7 +176,7 @@ export default {
       text-align: center;
       background-color: #333333;
       color: #cc9933;
-      border: solid 2px #f54322;
+      border: solid 2px #616672;
       border-radius: 20px;
       margin: 0 5px;
       font-size: 1.6em;

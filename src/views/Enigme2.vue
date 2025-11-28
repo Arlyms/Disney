@@ -12,6 +12,7 @@
             v-model="password1"
             @input="handleInput"
             maxlength="2"
+            placeholder="°w"
             aria-label="code1"
           />
         </div>
@@ -20,6 +21,7 @@
             v-model="password2"
             @input="handleInput"
             maxlength="2"
+            placeholder="°s"
             aria-label="code2"
           />
         </div>

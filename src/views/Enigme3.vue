@@ -11,6 +11,7 @@
           v-model="password"
           @input="handleInput"
           maxlength="3"
+          placeholder="0"
           aria-label="code"
         />
       </div>

@@ -153,7 +153,7 @@ export default {
       text-align: center;
       background-color: #333333;
       color: #cc9933;
-      border: solid 2px #f54322;
+      border: solid 2px #fed206;
       border-radius: 20px;
       margin: 0 5px;
       font-size: 1.6em;

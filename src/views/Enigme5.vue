@@ -10,7 +10,8 @@
         <input
           v-model="password"
           @input="handleInput"
-          maxlength="3"
+          maxlength="10"
+          placeholder="Pipeau"
           aria-label="code"
         />
       </div>
@@ -40,7 +41,7 @@ export default {
     handleInput() {
       // Ne pas valider automatiquement ; tronquer simplement la saisie
       if (this.password && this.password.length > 1) {
-        this.password = this.password.slice(0, 1);
+        this.password = this.password.slice(0, 10);
       }
     },
     login() {
@@ -153,7 +154,7 @@ export default {
       text-align: center;
       background-color: #333333;
       color: #cc9933;
-      border: solid 2px #f54322;
+      border: solid 2px #4ab745;
       border-radius: 20px;
       margin: 0 5px;
       font-size: 1.6em;
