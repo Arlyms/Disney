@@ -10,10 +10,13 @@
         <input
           v-model="password"
           @input="handleInput"
-          @keyup.enter="login"
-          maxlength="1"
+          maxlength="3"
           aria-label="code"
         />
+      </div>
+
+      <div class="validate-row">
+        <button class="validate-btn" @click="login" :disabled="isSubmitting">Valider</button>
       </div>
     </div>
   </div>
@@ -33,34 +36,30 @@ export default {
     };
   },
 
-  methods: {
+    methods: {
     handleInput() {
-      // Auto-validate as soon as maxlength is reached (no need to press Enter)
-      if (!this.password) return;
-      if (this.password.length >= 1 && !this.isSubmitting) {
+      // Ne pas valider automatiquement ; tronquer simplement la saisie
+      if (this.password && this.password.length > 1) {
         this.password = this.password.slice(0, 1);
-        this.isSubmitting = true;
-        // return promise so callers can wait
-        return this.login().finally(() => {
-          this.isSubmitting = false;
-        });
       }
     },
     login() {
+      if (this.isSubmitting) return Promise.resolve();
+      this.isSubmitting = true;
       const fullPassword = this.password;
       this.$store.commit('updateEnteredPassword', fullPassword);
       this.$store.commit('hideProtectedPage');
-      // return the promise so handleInput can track submission state
       return this.$store.dispatch('verifyPassword5').then(() => {
         if (this.$store.state.isProtectedPageVisible) {
-          // Redirige vers la page protégée
           this.$router.push('/6');
         } else {
           this.isPasswordIncorrect = true;
           setTimeout(() => {
-            this.isPasswordIncorrect = false; // Réinitialise en bleu après 1 seconde
+            this.isPasswordIncorrect = false;
           }, 1000);
         }
+      }).finally(() => {
+        this.isSubmitting = false;
       });
     },
   },
@@ -85,9 +84,7 @@ export default {
         position: relative;
         width: 200px;
         animation-duration: 0.5s;
-        img{
-        width: 200px;
-        }
+        img{ width: 200px; }
         .eye__option {
           z-index: 2;
           position: absolute;
@@ -97,19 +94,10 @@ export default {
           width: 44px;
           height: 44px;
           border: 4px solid #cc9933;
-          transition: background-color 0.5s; /* Add transition to background-color property */
-        
-
-          &--blue {
-            background: #0e5ed7; /* Blue color */
-          }
-
-          &--red {
-            background: #b30101; /* Red color */
-
-          } 
+          transition: background-color 0.5s;
+          &--blue { background: #0e5ed7; }
+          &--red { background: #b30101; } 
         } 
-
         .pupille{
             z-index: 3;
             position: absolute;
@@ -120,7 +108,6 @@ export default {
             height: 20px;
             background-color: black;
           }
-
         button{
           z-index: 4;
           position: absolute;
@@ -137,39 +124,37 @@ export default {
     } 
     .code{
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
     .password-input {
       display: flex;
+      font-size: 25px;
       justify-content: center;
-      width: 200px; /* Ajustez la largeur en fonction de vos besoins */
-      padding: 6px;
+      width: 50px; 
+      height: 100px;
       border-radius: 8px;
       border: 2px solid transparent;
       transition: border-color 0.18s ease, box-shadow 0.18s ease;
       background: transparent;
     }
-
     .password-input.error {
-      border-color: #b30101;
-      box-shadow: 0 0 10px rgba(179,1,1,0.28);
+      box-shadow: 0 0 50px rgba(216, 5, 5, 0.28);
     }
-
     .password-input.shake {
       animation-name: shake;
       animation-duration: 0.5s;
       animation-timing-function: ease-in-out;
     }
-
     .password-input input {
-      width: 160px;
-      height: 60px;
+      width: 200px;
+      height: 100px;
       padding: 0 12px;
       text-align: center;
       background-color: #333333;
       color: #cc9933;
-      border: none;
-      border-radius: 6px;
+      border: solid 2px #f54322;
+      border-radius: 20px;
       margin: 0 5px;
       font-size: 1.6em;
       transition: box-shadow 0.12s ease, background-color 0.12s ease;
@@ -178,28 +163,39 @@ export default {
         outline: none;
       }
     }
-
     .password-input.error input {
       box-shadow: 0 0 6px rgba(179,1,1,0.45);
     }
+
+    .validate-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .validate-btn {
+      background: #0387cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.12s ease, transform 0.12s ease;
+    }
+
+    .validate-btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: scale(0.98);
+    }
     }  
-    
   @keyframes shake {
-  0%, 100% {
-    transform: translateX(0);
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
   }
-  10%, 30%, 50%, 70%, 90% {
-    transform: translateX(-5px);
-  }
-  20%, 40%, 60%, 80% {
-    transform: translateX(5px);
-  }
-}
-
-.shake {
-  animation-name: shake;
-} 
-
+  .shake { animation-name: shake; } 
   }  
 </style>
 

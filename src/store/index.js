@@ -25,21 +25,21 @@ export default createStore({
       } 
     },
     verifyPassword2({ commit, state }) {
-      if (state.enteredPassword === '4') {
+      if (state.enteredPassword === '630' || state.enteredPassword === '0630') {
         commit('showProtectedPage');
       } else {
         console.log("n° de la boite")
       } 
     },
     verifyPassword3({ commit, state }) {
-      if (state.enteredPassword === '5') {
+      if (state.enteredPassword === '6') {
         commit('showProtectedPage');
       } else {
         console.log("n° de la boite")
       } 
     },
     verifyPassword4({ commit, state }) {
-      if (state.enteredPassword === '6') {
+      if (state.enteredPassword === '28') {
         commit('showProtectedPage');
       } else {
         console.log("n° de la boite")
