@@ -8,6 +8,8 @@ import E6 from '../views/Enigme6.vue'
 import E7 from '../views/Enigme7.vue'
 import E8 from '../views/Enigme8.vue'
 import E9 from '../views/Enigme9.vue'
+import E10 from '../views/Bravo.vue'
+
 const routes = [
   {
     path: '/',
@@ -60,6 +62,12 @@ const routes = [
     path: '/9',
     name: '9',
     component: E9,
+    meta: { requiresPassword: true }
+  },   
+  {
+    path: '/10',
+    name: '10',
+    component: E10,
     meta: { requiresPassword: true }
   }          
 ]

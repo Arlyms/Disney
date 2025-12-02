@@ -5,14 +5,27 @@
 
 <style>
 
+:root{
+  --disney-blue: #0e11c0;
+  --disney-purple: #6a00f4;
+  --disney-gold: #9233ff;
+}
+
+html, body, #app {
+  height: 100%;
+  margin: 0;
+}
+
 html{
-  width: 100%;
-  height: 100vh;
-  background-color: #151616;
+  background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.03), transparent 15%),
+              linear-gradient(180deg, var(--disney-blue) 70%, var(--disney-purple) 100%, var(--disney-gold) 120%);
+  background-attachment: fixed;
+  background-size: cover;
+  color: #f2f2f2;
 }
 #app {
   text-align: center;
-  color: #222324;  
+  color: #ffffff;
 }
 
 nav {

@@ -1,24 +1,27 @@
 <template>
   <div class="enigme1">
-    <!--<Loader v-if="showLoader" />-->
+    <transition name="fade">
+            <Loader v-if="showLoader" />
+    </transition>
+    <transition name="fade">
+      <Validate v-if="showValidation" />
+    </transition>
     <div id="dentist">
-      <div :class="['color_code']">
-        <button @click="login"></button>
-      </div>
-    </div>
-    <div class="code">
-      <div :class="['password-input', { shake: isPasswordIncorrect, error: isPasswordIncorrect }]">
-        <input
-          v-model="password"
-          @input="handleInput"
-          maxlength="3"
-          placeholder="0"
-          aria-label="code"
-        />
-      </div>
-
-      <div class="validate-row">
-        <button class="validate-btn" @click="login" :disabled="isSubmitting">Valider</button>
+      <div class="code">
+        <div :class="['password-input', { shake: isPasswordIncorrect, error: isPasswordIncorrect }]">
+          <input
+            v-model="password"
+            @input="handleInput"
+            maxlength="3"
+            placeholder="0"
+            aria-label="code"
+          />
+        </div>
+        <div class="validate-row">
+          <button class="validate-btn" @click="login" :disabled="isSubmitting">
+            <img src="@/assets/button.png" alt="Description de l'image">
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -27,11 +30,13 @@
 <script>
 // @ is an alias to /src
 import Loader from '@/components/loader.vue'
+import Validate from '@/components/validation.vue'
 
 export default {
   name: 'Enigme1',
   components: {
     Loader,
+    Validate,
   },
   data() {
     return {
@@ -40,12 +45,13 @@ export default {
       isPasswordIncorrect: false,
       isSubmitting: false,
       showLoader: true,
+      showValidation: false,
     };
   },
   mounted() {
     // Masquer le loader après 3 secondes
     setTimeout(() => {
-      this.showLoader = false;
+    this.showLoader = false;
     }, 3000);
   },
 
@@ -61,17 +67,30 @@ export default {
       this.isSubmitting = true;
       const fullPassword = this.password;
       this.$store.commit('updateEnteredPassword', fullPassword);
+      
       return this.$store.dispatch('verifyPassword1').then(() => {
-        if (this.$store.state.isProtectedPageVisible) {
-          this.$router.push('/2');
+      if (this.$store.state.isProtectedPageVisible) {
+          
+
+          this.showValidation = true; 
+          setTimeout(() => {
+            this.$router.push('/2');
+          }, 1500); // 💡 Ajustez ce délai selon la durée de votre animation de validation
+
         } else {
+          // Mot de passe incorrect : comportement actuel
           this.isPasswordIncorrect = true;
           setTimeout(() => {
             this.isPasswordIncorrect = false;
           }, 1000);
         }
       }).finally(() => {
-        this.isSubmitting = false;
+        // On ne définit isSubmitting=false qu'à la fin de tout, sauf en cas de succès 
+        // où la navigation va de toute façon détruire le composant.
+        // On le garde ici pour le cas d'échec.
+        if (!this.$store.state.isProtectedPageVisible) {
+            this.isSubmitting = false;
+        }
       });
     },
   },
@@ -83,7 +102,7 @@ export default {
   .enigme1{
     position: fixed;
     display: flex;
-    margin-top: 100px;
+    margin-top: 250px;
     flex-direction: column;
     width: 100%;
     height: 100vh;
@@ -91,61 +110,7 @@ export default {
       position: relative;
       display: flex;
       justify-content: center;
-      height: 200px;
-      .color_code{
-        position: relative;
-        width: 200px;
-        animation-duration: 0.5s;
-        img{
-        width: 200px;
-        }
-        .eye__option {
-          z-index: 2;
-          position: absolute;
-          left: 76px;
-          top: 23px;
-          border-radius: 50%;
-          width: 44px;
-          height: 44px;
-          border: 4px solid #cc9933;
-          transition: background-color 0.5s; /* Add transition to background-color property */
-        
-
-          &--blue {
-            background: #0e5ed7; /* Blue color */
-          }
-
-          &--red {
-            background: #b30101; /* Red color */
-
-          } 
-        } 
-
-        .pupille{
-            z-index: 3;
-            position: absolute;
-            left: 92px;
-            top: 39px;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            background-color: black;
-          }
-
-        button{
-          z-index: 4;
-          position: absolute;
-          left: 80px;
-          top: 27px;
-          border-radius: 50%;
-          width: 44px;
-          height: 44px;
-          background-color: transparent;
-          border: none;
-          cursor: pointer;
-        }
-      }
-    } 
+      height: 400px;
     .code{
       display: flex;
       flex-direction: column;
@@ -163,10 +128,6 @@ export default {
       background: transparent;
     }
 
-    .password-input.error {
-      //border-color: #b30101;
-      box-shadow: 0 0 50px rgba(216, 5, 5, 0.28);
-    }
 
     .password-input.shake {
       animation-name: shake;
@@ -175,41 +136,44 @@ export default {
     }
 
     .password-input input {
-      width: 50px;
-      height: 100px;
+      width: 75px;
+      height: 150px;
       padding: 0 12px;
       text-align: center;
-      background-color: #333333;
+      background-color: transparent;
       color: #cc9933;
-      border: solid 2px #f54322;
+      border: solid 5px #f54322;
       border-radius: 20px;
       margin: 0 5px;
-      font-size: 1.6em;
+      font-size: 2.5em;
       transition: box-shadow 0.12s ease, background-color 0.12s ease;
       &:focus{
-        background-color: #4b4b4b;
+        background-color: #4b4b4b7a;
         outline: none;
       }
     }
 
     .password-input.error input {
-      box-shadow: 0 0 6px rgba(179,1,1,0.45);
+      border-color: #b30101;  
+
     }
-        .validate-row {
+    .validate-row {
       display: flex;
       justify-content: center;
-      margin-top: 16px;
+      margin-top: 150px;
     }
 
     .validate-btn {
-      background: #0387cc;
+      background: #10019c;
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 10px 30px;
+      border-radius: 20px;
       font-size: 1rem;
       cursor: pointer;
       transition: opacity 0.12s ease, transform 0.12s ease;
+
+      }
     }
 
     .validate-btn[disabled] {
@@ -217,8 +181,16 @@ export default {
       cursor: not-allowed;
       transform: scale(0.98);
     }
-    
-    }  
+    button {
+    img {
+      width: 50px;
+      margin: 0px;
+      padding: 0px;
+      height: auto;
+    } 
+    }
+    }
+  }  
     
   @keyframes shake {
   0%, 100% {
@@ -232,10 +204,15 @@ export default {
   }
 }
 
-.shake {
-  animation-name: shake;
-} 
+/* Transition fade-out */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.8s ease;
+}
 
-  }  
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
 
